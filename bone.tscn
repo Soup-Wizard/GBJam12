@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://chbgiwbwssqdu"]
+
+[ext_resource type="Script" path="res://bone.gd" id="1_7vf6p"]
+[ext_resource type="Texture2D" uid="uid://d8i6tpi5inm8" path="res://assets/Bone.png" id="1_l0ye6"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fpcul"]
+radius = 2.15542
+height = 14.0
+
+[node name="bone" type="Area2D"]
+script = ExtResource("1_7vf6p")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_l0ye6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 0.837758
+shape = SubResource("CapsuleShape2D_fpcul")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

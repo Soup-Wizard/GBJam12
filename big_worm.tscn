@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://b8bpa4nuhsf3f"]
+
+[ext_resource type="Texture2D" uid="uid://biix5g0lbgway" path="res://assets/BigWorm.png" id="1_6g8ky"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45ru2"]
+atlas = ExtResource("1_6g8ky")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e7nwn"]
+atlas = ExtResource("1_6g8ky")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ee80j"]
+atlas = ExtResource("1_6g8ky")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kwvmh"]
+atlas = ExtResource("1_6g8ky")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fodmj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45ru2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e7nwn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ee80j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kwvmh")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="BigWorm" type="StaticBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_fodmj")
+autoplay = "default"
+frame_progress = 0.264458
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
