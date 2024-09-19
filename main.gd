@@ -35,8 +35,6 @@ func _on_worm_3_body_entered(body):
 
 func _on_area_2d_body_entered(body):
 	$worm4.visible = true
-	#$worm4/AnimatedSprite2D.visible = true
-	#$worm4/CollisionShape2D.visible = true
 
 
 func _on_worm_4_body_entered(body):

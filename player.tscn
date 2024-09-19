@@ -1,8 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://quxa1ka3rk8y"]
+[gd_scene load_steps=21 format=3 uid="uid://quxa1ka3rk8y"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_ehm0a"]
 [ext_resource type="Texture2D" uid="uid://cadqeh6bulnl0" path="res://assets/GhostBoy2-Idle.png" id="1_mnc8v"]
 [ext_resource type="Texture2D" uid="uid://bq8whuylyqncv" path="res://assets/GhostBoy2-Laugh.png" id="2_o5c00"]
+[ext_resource type="FontFile" uid="uid://ctgcarcu01olv" path="res://assets/Tiny5-Regular.ttf" id="4_qxmwg"]
+[ext_resource type="Texture2D" uid="uid://d8i6tpi5inm8" path="res://assets/Bone.png" id="5_sp73w"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cxtv3"]
 atlas = ExtResource("1_mnc8v")
@@ -115,6 +117,44 @@ height = 14.0
 [node name="player" type="CharacterBody2D"]
 script = ExtResource("1_ehm0a")
 
+[node name="Bones" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="Bones"]
+texture_filter = 1
+offset_left = 32.0
+offset_top = -2.0
+offset_right = 64.0
+offset_bottom = 34.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+theme_override_fonts/font = ExtResource("4_qxmwg")
+theme_override_font_sizes/font_size = 32
+
+[node name="Sprite2D" type="Sprite2D" parent="Bones"]
+texture_filter = 1
+position = Vector2(18, 17)
+scale = Vector2(2, 2)
+texture = ExtResource("5_sp73w")
+
+[node name="Label2" type="Label" parent="Bones"]
+texture_filter = 1
+offset_left = 32.0
+offset_top = 27.0
+offset_right = 64.0
+offset_bottom = 63.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+theme_override_fonts/font = ExtResource("4_qxmwg")
+theme_override_font_sizes/font_size = 32
+
+[node name="Sprite2D2" type="Sprite2D" parent="Bones"]
+texture_filter = 1
+position = Vector2(15, 46)
+scale = Vector2(2, 2)
+texture = ExtResource("2_o5c00")
+hframes = 9
+frame = 2
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_cif5r")
@@ -130,6 +170,7 @@ shape = SubResource("CapsuleShape2D_8vxy2")
 offset = Vector2(0, -48)
 zoom = Vector2(2, 2)
 limit_left = 0
+limit_top = -1060
 limit_right = 495
 
 [node name="dashTimer" type="Timer" parent="."]

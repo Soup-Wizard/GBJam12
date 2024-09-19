@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://0bcjdphvbcmb"]
+[gd_scene load_steps=11 format=3 uid="uid://0bcjdphvbcmb"]
 
 [ext_resource type="Texture2D" uid="uid://dd6fdyca6n14b" path="res://assets/Skull.png" id="1_4bmst"]
+[ext_resource type="PackedScene" uid="uid://b8xkhf8gerdwr" path="res://hit.tscn" id="2_ew41s"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n0tqo"]
 atlas = ExtResource("1_4bmst")
@@ -55,13 +56,17 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ha6ck"]
 size = Vector2(13, 13)
 
-[node name="skull" type="CharacterBody2D"]
+[node name="skull" type="Node2D"]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="hit" parent="." instance=ExtResource("2_ew41s")]
+collision_layer = 2
+collision_mask = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="hit"]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_dov47")
 autoplay = "default"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hit"]
 position = Vector2(-0.5, 1.5)
 shape = SubResource("RectangleShape2D_ha6ck")
