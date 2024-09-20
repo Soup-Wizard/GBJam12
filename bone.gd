@@ -4,8 +4,8 @@ var collected = false
 
 func _ready():
 	var tween = create_tween().set_loops()
-	tween.tween_property($Sprite2D, "position", Vector2($Sprite2D.position.x, $Sprite2D.position.y - 3), 1)
-	tween.tween_property($Sprite2D, "position", Vector2($Sprite2D.position.x, $Sprite2D.position.y), 1)
+	tween.tween_property($Sprite2D, "position", Vector2($Sprite2D.position.x, $Sprite2D.position.y - 3), 0.7)
+	tween.tween_property($Sprite2D, "position", Vector2($Sprite2D.position.x, $Sprite2D.position.y), 0.7)
 
 func _on_body_entered(body):
 	if !collected:

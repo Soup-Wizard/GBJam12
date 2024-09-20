@@ -12,10 +12,11 @@ var bones = 0
 var lives = 3
 var canTele = false
 var teleCoords: Vector2
-var canDash = false
-var canJump = false
+var canDash = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
+var canJump = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
 var dashing = false
 var jumping = false
+var canBeHit = true
 var is_grounded
 
 func playerTele():
@@ -26,21 +27,34 @@ func playerTele():
 func on_collision_with_enemy(enemy_position: Vector2):
 	# Calculate the direction from the enemy to the player
 	var bounce_direction = (position - enemy_position).normalized()
-	
+	#var tween = create_tween()
+	print(bounce_direction)
+	# LEFT (-0.983082, 0.183163)
+	# TOP (-0.458541, -0.888673)
+	# BOTTOM (0.376269, 0.926511)
+	# RIGHT (0.999227, 0.039308)
+	## NOTE
+	# Maybe use a tween that only lasts .1 or .15 for example, that moves pos
+	# based on bounce_direction.
+	# Maybe not because it tweened into the ground and broke
+
 	if is_grounded:
 		velocity.y = BOUNCE_STRENGTH
 	# Apply the bounce in the opposite direction
-	velocity = bounce_direction * BOUNCE_STRENGTH
+	#tween.tween_property(self, "position", position - (bounce_direction * 50), 0.15)
+	velocity = (bounce_direction * BOUNCE_STRENGTH) * 2
 
 func _physics_process(delta):
 	#Handle Bones & Lives
 	$Bones/Label.text = ": " + str(bones)
-	$Bones/Label2.text = ": " + str(lives)
 	if lives == 2:
+		$Bones/Label2.text = ": " + str(lives)
 		$Bones/Sprite2D2.frame = 1
 	elif lives == 1:
+		$Bones/Label2.text = ": " + str(lives)
 		$Bones/Sprite2D2.frame = 0
 	elif lives == 0:
+		$Bones/Label2.text = ": 0"
 		$Bones/Sprite2D2.flip_v = true
 	
 	is_grounded = is_on_floor()
@@ -101,3 +115,13 @@ func _on_jump_timer_timeout():
 
 func _on_dash_cooldown_timeout():
 	canDash = true
+
+
+func _on_hit_timer_timeout():
+	canBeHit = true
+
+
+func _on_visibility_timer_timeout():
+	visible = false
+	await get_tree().create_timer(0.05).timeout
+	visible = true

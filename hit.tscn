@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://hit.gd" id="1_eson3"]
 
 [node name="hit" type="Area2D"]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_eson3")
 
 [node name="Timer" type="Timer" parent="."]

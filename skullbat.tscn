@@ -1,6 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://p73l1qymqvut"]
+[gd_scene load_steps=11 format=3 uid="uid://p73l1qymqvut"]
 
+[ext_resource type="Script" path="res://skullbat.gd" id="1_ai6d3"]
 [ext_resource type="Texture2D" uid="uid://cocs6ed0ks2t0" path="res://assets/SkullBat.png" id="1_t0jt8"]
+[ext_resource type="PackedScene" uid="uid://b8xkhf8gerdwr" path="res://hit.tscn" id="2_getut"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lrkan"]
+size = Vector2(11, 10)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_psrto"]
 atlas = ExtResource("1_t0jt8")
@@ -38,16 +43,24 @@ animations = [{
 "speed": 24.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lrkan"]
-size = Vector2(11, 10)
+[sub_resource type="CircleShape2D" id="CircleShape2D_qm085"]
+radius = 5.0
 
-[node name="skullbat" type="CharacterBody2D"]
+[node name="skullbat" type="Node2D"]
+script = ExtResource("1_ai6d3")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="hit" parent="." instance=ExtResource("2_getut")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hit"]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_lrkan")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="hit"]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_2cbu1")
 autoplay = "default"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, 0)
-shape = SubResource("RectangleShape2D_lrkan")
+[node name="StaticBody2D" type="AnimatableBody2D" parent="hit"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hit/StaticBody2D"]
+shape = SubResource("CircleShape2D_qm085")

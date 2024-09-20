@@ -12,7 +12,7 @@ func _process(delta):
 
 
 func _on_welleport_1_body_entered(body):
-	body.teleCoords = Vector2(376, 269)
+	body.teleCoords = Vector2(376, 365)
 	body.canTele = true
 
 
