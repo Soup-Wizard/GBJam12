@@ -10,8 +10,19 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var worms = 0
 var bones = 0
 var lives = 3
+var checkpoints = {}
+var checkpointPos
+# Instead of lives, start at 0 and make it checkpoints
+# Every headstone becomes a check point you can travel back to
+# There should only be a few checkpoints
+
+# Or, alternative. Hitting an enemy sends you back to the last checkpoint and deducts 1 life
+# Hitting an enemy again teleports you to the one before and so on
+# Reaching 0 spawns you back to the start and you lose your checkpoint priveledges
+# This is the way ^
 var canTele = false
 var teleCoords: Vector2
+var spawnPos = Vector2(24, 121)
 var canDash = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
 var canJump = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
 var dashing = false
@@ -19,13 +30,19 @@ var jumping = false
 var canBeHit = true
 var is_grounded
 
-func playerTele():
+func wellTele():
 	if canTele:
 		position = teleCoords
 		canTele = false
 
+func checkpointTele(pos):
+	if lives > 0 && !checkpoints.is_empty():
+		position = pos #checkpoints.values()[checkpoints.size() - 1]
+	if lives == 0 || checkpoints.is_empty():
+		position = spawnPos
+
 func on_collision_with_enemy(enemy_position: Vector2):
-	# Calculate the direction from the enemy to the player
+	# Calculate the direction from the enemy to the playeraaaaaaa
 	var bounce_direction = (position - enemy_position).normalized()
 	#var tween = create_tween()
 	print(bounce_direction)
@@ -63,21 +80,30 @@ func _physics_process(delta):
 		velocity.y += gravity * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("up") and is_on_floor() and lives >= 1:
+	if Input.is_action_just_pressed("up") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 	
 	# Handle wells
-	if Input.is_action_just_pressed("down") and lives >= 1:
-		playerTele()
+	if Input.is_action_just_pressed("down"):
+		wellTele()
 	
-	if Input.is_action_just_pressed("Pow1") and lives >= 1:
+	# Handle Checkpoints
+	if Input.is_action_just_pressed("select"):
+		if lives > 0 && !checkpoints.is_empty():
+			checkpointTele(checkpoints.values()[checkpointPos])
+			if checkpointPos == 0:
+				checkpointPos = checkpoints.size() - 1
+			else:
+				checkpointPos -= 1
+	
+	if Input.is_action_just_pressed("Pow1"):
 		if canJump:
 			if !jumping:
 				jumping = true
 				$jumpTimer.start()
 				velocity.y = JUMP_VELOCITY * 1.5
 	
-	if Input.is_action_just_pressed("Pow2") and lives >= 1:
+	if Input.is_action_just_pressed("Pow2"):
 		if canDash:
 			canDash = false
 			dashing = true
@@ -91,7 +117,7 @@ func _physics_process(delta):
 				velocity.x = DASH_SPEED * 4
 	
 	var direction = Input.get_axis("left", "right")
-	if direction and lives >= 1:
+	if direction:
 		if !dashing:
 			velocity.x = direction * SPEED
 			if direction < 0:

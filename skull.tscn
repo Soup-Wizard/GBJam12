@@ -56,8 +56,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ha6ck"]
 size = Vector2(13, 13)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_isgmo"]
-radius = 6.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_85gwd"]
+radius = 5.0
+height = 10.0
 
 [node name="skull" type="Node2D"]
 
@@ -72,8 +73,8 @@ autoplay = "default"
 position = Vector2(-0.5, 1.5)
 shape = SubResource("RectangleShape2D_ha6ck")
 
-[node name="StaticBody2D" type="AnimatableBody2D" parent="hit"]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="hit"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="hit/StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hit/CharacterBody2D"]
 position = Vector2(0, 2)
-shape = SubResource("CircleShape2D_isgmo")
+shape = SubResource("CapsuleShape2D_85gwd")
