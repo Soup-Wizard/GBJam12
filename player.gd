@@ -10,19 +10,10 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var worms = 0
 var bones = 0
 var lives = 3
-var checkpoints = {}
-var checkpointPos
-# Instead of lives, start at 0 and make it checkpoints
-# Every headstone becomes a check point you can travel back to
-# There should only be a few checkpoints
-
-# Or, alternative. Hitting an enemy sends you back to the last checkpoint and deducts 1 life
-# Hitting an enemy again teleports you to the one before and so on
-# Reaching 0 spawns you back to the start and you lose your checkpoint priveledges
-# This is the way ^
+var checkpoint: Vector2
+var spawnPos = Vector2(49, 121)
 var canTele = false
 var teleCoords: Vector2
-var spawnPos = Vector2(24, 121)
 var canDash = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
 var canJump = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
 var dashing = false
@@ -35,31 +26,11 @@ func wellTele():
 		position = teleCoords
 		canTele = false
 
-func checkpointTele(pos):
-	if lives > 0 && !checkpoints.is_empty():
-		position = pos #checkpoints.values()[checkpoints.size() - 1]
-	if lives == 0 || checkpoints.is_empty():
+func checkpointTele():
+	if lives > 0 && checkpoint:
+		position = checkpoint
+	if lives == 0 || !checkpoint:
 		position = spawnPos
-
-func on_collision_with_enemy(enemy_position: Vector2):
-	# Calculate the direction from the enemy to the playeraaaaaaa
-	var bounce_direction = (position - enemy_position).normalized()
-	#var tween = create_tween()
-	print(bounce_direction)
-	# LEFT (-0.983082, 0.183163)
-	# TOP (-0.458541, -0.888673)
-	# BOTTOM (0.376269, 0.926511)
-	# RIGHT (0.999227, 0.039308)
-	## NOTE
-	# Maybe use a tween that only lasts .1 or .15 for example, that moves pos
-	# based on bounce_direction.
-	# Maybe not because it tweened into the ground and broke
-
-	if is_grounded:
-		velocity.y = BOUNCE_STRENGTH
-	# Apply the bounce in the opposite direction
-	#tween.tween_property(self, "position", position - (bounce_direction * 50), 0.15)
-	velocity = (bounce_direction * BOUNCE_STRENGTH) * 2
 
 func _physics_process(delta):
 	#Handle Bones & Lives
@@ -72,9 +43,7 @@ func _physics_process(delta):
 		$Bones/Sprite2D2.frame = 0
 	elif lives == 0:
 		$Bones/Label2.text = ": 0"
-		$Bones/Sprite2D2.flip_v = true
 	
-	is_grounded = is_on_floor()
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -89,12 +58,8 @@ func _physics_process(delta):
 	
 	# Handle Checkpoints
 	if Input.is_action_just_pressed("select"):
-		if lives > 0 && !checkpoints.is_empty():
-			checkpointTele(checkpoints.values()[checkpointPos])
-			if checkpointPos == 0:
-				checkpointPos = checkpoints.size() - 1
-			else:
-				checkpointPos -= 1
+		if lives > 0 && checkpoint:
+			checkpointTele()
 	
 	if Input.is_action_just_pressed("Pow1"):
 		if canJump:

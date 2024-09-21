@@ -11,4 +11,6 @@ func _on_body_entered(body):
 	if !collected:
 		collected = true
 		body.bones += 1
-		self.queue_free()
+		if body.bones == 5 || body.bones == 10 || body.bones == 15:
+			body.lives += 1
+		queue_free()
