@@ -4,6 +4,12 @@ const SPEED = 100.0
 const DASH_SPEED = 175
 const JUMP_VELOCITY = -225.0
 const BOUNCE_STRENGTH = 375
+const TEXT = {
+	"BigWorm1": "Hey ghost boy, you may be dead now but you still owe me my bones! I'm gonna make sure your suffering is endless if I don't see you at the moon with 15 bones. I'll hook you up this one time so I can get my bones. Talk to little worm behind me for a new trick, but that's all you get from me. Don't play with my bones, Ghosty! Playing with my bones is like playing with my emotions!",
+	"BigWormHasSpoken": "Quit wasting my time and get my bones!"
+}
+
+@onready var textLabel = $Bones/Text/RichTextLabel
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -14,8 +20,8 @@ var checkpoint: Vector2
 var spawnPos = Vector2(49, 121)
 var canTele = false
 var teleCoords: Vector2
-var canDash = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
-var canJump = true ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
+var canDash = false ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
+var canJump = false ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
 var dashing = false
 var jumping = false
 var canBeHit = true
@@ -32,10 +38,22 @@ func checkpointTele():
 	if lives == 0 || !checkpoint:
 		position = spawnPos
 
+func playText(txt):
+	textLabel.visible_characters = 0
+	textLabel.text = TEXT[txt]
+	for i in TEXT[txt].length():
+		#if textLabel.get_visible_line_count() == 2:
+			#textLabel  --  If time permits, make it wait for user input to scroll
+		textLabel.visible_characters += 1
+		await get_tree().create_timer(0.090).timeout
+
 func _physics_process(delta):
 	#Handle Bones & Lives
 	$Bones/Label.text = ": " + str(bones)
-	if lives == 2:
+	if lives >= 3:
+		$Bones/Label2.text = ": " + str(lives)
+		$Bones/Sprite2D2.frame = 2
+	elif lives == 2:
 		$Bones/Label2.text = ": " + str(lives)
 		$Bones/Sprite2D2.frame = 1
 	elif lives == 1:
@@ -64,6 +82,7 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("Pow1"):
 		if canJump:
 			if !jumping:
+				$Bones/JumpArrow/Sprite2D.visible = true
 				jumping = true
 				$jumpTimer.start()
 				velocity.y = JUMP_VELOCITY * 1.5
@@ -72,6 +91,7 @@ func _physics_process(delta):
 		if canDash:
 			canDash = false
 			dashing = true
+			$Bones/DashArrow/Sprite2D.visible = true
 			$dashTimer.start()
 			$dashCooldown.start()
 			if $AnimatedSprite2D.flip_h:
@@ -102,10 +122,12 @@ func _on_dash_timer_timeout():
 
 func _on_jump_timer_timeout():
 	jumping = false
+	$Bones/JumpArrow/Sprite2D.visible = false
 
 
 func _on_dash_cooldown_timeout():
 	canDash = true
+	$Bones/DashArrow/Sprite2D.visible = false
 
 
 func _on_hit_timer_timeout():
