@@ -5,8 +5,11 @@ const DASH_SPEED = 175
 const JUMP_VELOCITY = -225.0
 const BOUNCE_STRENGTH = 375
 const TEXT = {
-	"BigWorm1": "Hey ghost boy, you may be dead now but you still owe me my bones! I'm gonna make sure your suffering is endless if I don't see you at the moon with 15 bones. I'll hook you up this one time so I can get my bones. Talk to little worm behind me for a new trick, but that's all you get from me. Don't play with my bones, Ghosty! Playing with my bones is like playing with my emotions!",
-	"BigWormHasSpoken": "Quit wasting my time and get my bones!"
+	"BigWorm1": "You may be dead now but you still owe me. I'll make sure your suffering is endless if I don't see you at the moon with 15 bones.\nTalk to little worm behind me for a new trick, but that's all you get from me.\nDon't play with my bones, Ghosty! Playing with my bones is like playing with my emotions!",
+	"BigWormHasSpoken": "Quit wasting my time and get my bones!",
+	"LittleWorm1": "Don't tell Big Worm about this.\nUse this with your jump to reach higher ground.",
+	"BigWorm2": "What did I tell you, Ghosty? Stop playing with my emotions!\nGet my bones before you waste my time again.",
+	"BigWorm3": "You actually did it? I guess I underestimated your abilities.\nLet the worm moon commence and free your soul!"
 }
 
 @onready var textLabel = $Bones/Text/RichTextLabel
@@ -25,7 +28,7 @@ var canJump = false ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
 var dashing = false
 var jumping = false
 var canBeHit = true
-var is_grounded
+var textActive = false
 
 func wellTele():
 	if canTele:
@@ -39,13 +42,19 @@ func checkpointTele():
 		position = spawnPos
 
 func playText(txt):
+	textActive = true
 	textLabel.visible_characters = 0
 	textLabel.text = TEXT[txt]
+	$Bones/Text.visible = true
 	for i in TEXT[txt].length():
 		#if textLabel.get_visible_line_count() == 2:
 			#textLabel  --  If time permits, make it wait for user input to scroll
 		textLabel.visible_characters += 1
-		await get_tree().create_timer(0.090).timeout
+		await get_tree().create_timer(0.084).timeout
+	await get_tree().create_timer(3).timeout
+	$Bones/Text.visible = false
+	textLabel.text = ""
+	textActive = false
 
 func _physics_process(delta):
 	#Handle Bones & Lives

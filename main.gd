@@ -1,11 +1,9 @@
 extends Node2D
 
-var BigWorm1Speaking = false
 var BigWormHasSpoken = false
 var BigWorm2Speaking = false
-var LittleWorm1Speaking = false
-
-var textBox
+var LittleWorm1 = true
+var LittleWorm2 = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -45,38 +43,43 @@ func _on_worm_3_body_entered(body):
 
 
 func _on_area_2d_body_entered(body):
-	$worm4.visible = true
+	if !LittleWorm1:
+		$worm4.visible = true
+		body.canDash = true
+		body.get_node("Bones/DashArrow").visible = true
+		body.playText("LittleWorm1")
+		LittleWorm1 = true
 
 
-func _on_worm_4_body_entered(body):
-	body.canDash = true
-	body.get_node("Bones/DashArrow").visible = true
+#func _on_worm_4_body_entered(body):
+	#if !LittleWorm1:
+		#body.playText("LittleWorm1")
+		#LittleWorm1 = true
 
 
 func _on_big_worm_area_body_entered(body):
-	if !BigWorm1Speaking:
-		BigWorm1Speaking = true
+	if !body.textActive:
 		if !BigWormHasSpoken:
 			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", false)
 			$BigWorm1/Blocker.visible = true
-		textBox = body.get_node("Bones/Text")
-		textBox.visible = true
 		if !BigWormHasSpoken:
 			body.playText("BigWorm1")
 		else:
 			body.playText("BigWormHasSpoken")
-			$BigWorm1/Timer.wait_time = 14
-		
-		$BigWorm1/Timer.start()
 		
 		if !BigWormHasSpoken:
-			await get_tree().create_timer(20).timeout
+			await get_tree().create_timer(25).timeout
 			$BigWorm1/Blocker.visible = false
 			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", true)
+			BigWormHasSpoken = true
+			await get_tree().create_timer(10).timeout
+			LittleWorm1 = false
 			
 
 
-func _on_timer_timeout():
-	BigWorm1Speaking = false
-	BigWormHasSpoken = true
-	textBox.visible = false
+func _on_big_worm_2_area_body_entered(body):
+	if body.bones < 15:
+		await body.playText("BigWorm2")
+		body.checkpointTele()
+	elif body.bones >= 15:
+		body.playText("BigWorm3")
