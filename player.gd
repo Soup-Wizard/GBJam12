@@ -6,12 +6,21 @@ const JUMP_VELOCITY = -225.0
 const BOUNCE_STRENGTH = 375
 
 const TEXT = {
-	"BigWorm1": "You may be dead now but you still owe me. I'll make sure your suffering is endless if I don't see you at the moon with 15 bones.\nTalk to little worm behind me for a new trick, but that's all you get from me.\nDon't play with my bones, Ghosty! Playing with my bones is like playing with my emotions!",
+	"BigWorm1": "You may be dead now but you still owe me. I'll make sure you suffer endlessly if you don't meet me at the moon with 15 bones.",
+	"BigWorm1.1": "Talk to Little Worm behind me for a new trick, but that's all you get from me.",
+	"BigWorm1.2": "Don't play with my bones, Ghosty! Playing with my bones is like playing with my emotions!",
 	"BigWormHasSpoken": "Quit wasting my time and get my bones!",
 	"LittleWorm1": "Don't tell Big Worm about this.\nUse this with your jump to reach higher ground.",
 	"BigWorm2": "What did I tell you, Ghosty? Stop playing with my emotions!\nGet my bones before you waste my time again.",
-	"BigWorm3": "You actually did it? I guess I underestimated your abilities.\nLet the worm moon commence and free your soul!",
-	"Checkpoint": "Checkpoint activated"
+	"BigWorm3": "You actually did it? I guess I underestimated you...\n",
+	"BigWorm4": "Let the worm moon commence! Free your SPOOKY soul!",
+	"Checkpoint": "Checkpoint activated!",
+	"CheckpointRead": "Let's see what it says...",
+	"Checkpoint1": "'Oh how I wish I made it to the clouds before I died...'\n'Those beautiful blobs of vapor filled with bones.'",
+	"Checkpoint2": "'Oh how I wish I took my time in life before I died...'\n'Then I wouldn't be so dead right now.'",
+	"Checkpoint3": "'Oh how I wish I ate more food before I died...'\n'Then I wouldn't be so hungry right now.",
+	"Ending1": "Art/Audio/Code created by\nSoup-Wizard for GBJAM 12",
+	"Ending2": "Thanks for playing!\n- Soup-Wizard"
 }
 
 @onready var textLabel = $Bones/Text/RichTextLabel
@@ -31,16 +40,22 @@ var dashing = false
 var jumping = false
 var canBeHit = true
 var textActive = false
+var ending = false
+
+# NOTE
+# When time permits, add a func with a tween that drags your character to center of the moon,
+# disables controls, and plays the ghost laugh animation on repeat.
 
 func wellTele():
 	if canTele:
 		position = teleCoords
 		canTele = false
 
-func checkpointTele():
-	if lives > 0 && checkpoint:
-		position = checkpoint
-	if lives == 0 || !checkpoint:
+func checkpointTele(wormReturn = false):
+	if checkpoint:
+		if wormReturn || lives > 0:
+			position = checkpoint
+	else:
 		position = spawnPos
 
 func playText(txt):
@@ -53,10 +68,20 @@ func playText(txt):
 			#textLabel  --  If time permits, make it wait for user input to scroll
 		textLabel.visible_characters += 1
 		await get_tree().create_timer(0.084).timeout
-	await get_tree().create_timer(3).timeout
-	$Bones/Text.visible = false
-	textLabel.text = ""
-	textActive = false
+	await get_tree().create_timer(2).timeout
+	if txt != "Ending2":
+		$Bones/Text.visible = false
+		textLabel.text = ""
+		textActive = false
+
+func endingAnim():
+	#$AnimatedSprite2D.stop()
+	$AnimatedSprite2D.play("laugh")
+	$CollisionShape2D.queue_free()
+	var tween = create_tween()
+	tween.tween_property($AnimatedSprite2D, "position", Vector2(104, -1384), 3)
+	$AnimatedSprite2D.position = Vector2(104, -1384)
+	pass
 
 func _physics_process(delta):
 	#Handle Bones & Lives
@@ -74,23 +99,23 @@ func _physics_process(delta):
 		$Bones/Label2.text = ": 0"
 	
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() and !ending:
 		velocity.y += gravity * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("up") and is_on_floor():
+	if Input.is_action_just_pressed("up") and is_on_floor() and !ending:
 		velocity.y = JUMP_VELOCITY
 	
 	# Handle wells
-	if Input.is_action_just_pressed("down"):
+	if Input.is_action_just_pressed("down") and !ending:
 		wellTele()
 	
 	# Handle Checkpoints
-	if Input.is_action_just_pressed("select"):
+	if Input.is_action_just_pressed("select") and !ending:
 		if lives > 0 && checkpoint:
 			checkpointTele()
 	
-	if Input.is_action_just_pressed("Pow1"):
+	if Input.is_action_just_pressed("Pow1") and !ending:
 		if canJump:
 			if !jumping:
 				$Bones/JumpArrow/Sprite2D.visible = true
@@ -98,7 +123,7 @@ func _physics_process(delta):
 				$jumpTimer.start()
 				velocity.y = JUMP_VELOCITY * 1.5
 	
-	if Input.is_action_just_pressed("Pow2"):
+	if Input.is_action_just_pressed("Pow2") and !ending:
 		if canDash:
 			canDash = false
 			dashing = true
@@ -112,17 +137,17 @@ func _physics_process(delta):
 				velocity.y = JUMP_VELOCITY * 0.6
 				velocity.x = DASH_SPEED * 4
 	var direction = Input.get_axis("left", "right")
-	if direction:
+	if direction and !ending:
 		if !dashing:
 			velocity.x = direction * SPEED
 			if direction < 0:
 				$AnimatedSprite2D.flip_h = true
 			else:
 				$AnimatedSprite2D.flip_h = false
-	else:
+	elif !ending:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-		
-	move_and_slide()
+	if !ending:
+		move_and_slide()
 
 func _on_dash_timer_timeout():
 	dashing = false

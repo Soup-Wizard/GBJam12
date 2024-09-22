@@ -56,23 +56,50 @@ func _on_big_worm_area_body_entered(body):
 			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", false)
 			$BigWorm1/Blocker.visible = true
 		if !BigWormHasSpoken:
-			body.playText("BigWorm1")
+			await body.playText("BigWorm1")
+			await body.playText("BigWorm1.1")
+			$BigWorm1/Blocker.visible = false
+			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", true)
+			await body.playText("BigWorm1.2")
+			BigWormHasSpoken = true
+			LittleWorm1 = false
 		else:
 			body.playText("BigWormHasSpoken")
 		
-		if !BigWormHasSpoken:
-			await get_tree().create_timer(25).timeout
-			$BigWorm1/Blocker.visible = false
-			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", true)
-			BigWormHasSpoken = true
-			await get_tree().create_timer(10).timeout
-			LittleWorm1 = false
+		#if !BigWormHasSpoken:
+			#await get_tree().create_timer(25).timeout
+			#$BigWorm1/Blocker.visible = false
+			#$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", true)
+			#BigWormHasSpoken = true
+			#await get_tree().create_timer(10).timeout
+			#LittleWorm1 = false
 
 func _on_big_worm_2_area_body_entered(body):
-	if body.bones < 15:
+	if body.bones < 15 && !BigWorm2Speaking:
+		BigWorm2Speaking = true
+		await get_tree().create_timer(3).timeout
+		$BigWorm2.visible = true
 		await body.playText("BigWorm2")
-		body.checkpointTele()
-	elif body.bones >= 15:
-		body.playText("BigWorm3")
+		body.checkpointTele(true)
+		BigWorm2Speaking = false
+		$BigWorm2.visible = false
+	elif body.bones >= 15 && !BigWorm2Speaking:
+		BigWorm2Speaking = true
+		$BigWorm2/blocker/CollisionShape2D.set_deferred("disabled", false)
+		await get_tree().create_timer(3).timeout
+		$BigWorm2.visible = true
+		await body.playText("BigWorm3")
+		var bonesNode = body.get_node("Bones")
+		bonesNode.get_node("Label").visible = false
+		bonesNode.get_node("Sprite2D").visible = false
+		bonesNode.get_node("Label2").visible = false
+		bonesNode.get_node("Sprite2D2").visible = false
+		#await get_tree().create_timer(0.5).timeout
 		for i in $WORM_MOON.get_children():
 			i.wormMoon()
+		await body.playText("BigWorm4")
+		await get_tree().create_timer(2).timeout
+		await body.playText("Ending1")
+		body.ending = true
+		await body.endingAnim()
+		await body.playText("Ending2")

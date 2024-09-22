@@ -212,17 +212,17 @@ autoplay = "default"
 frame = 3
 frame_progress = 0.0502164
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -1)
-shape = SubResource("CapsuleShape2D_8vxy2")
-
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="AnimatedSprite2D"]
 offset = Vector2(0, -16)
 zoom = Vector2(2, 2)
 limit_left = 0
 limit_top = -1408
 limit_right = 495
 position_smoothing_speed = 7.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("CapsuleShape2D_8vxy2")
 
 [node name="dashTimer" type="Timer" parent="."]
 wait_time = 0.1
