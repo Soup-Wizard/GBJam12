@@ -74,3 +74,5 @@ func _on_big_worm_2_area_body_entered(body):
 		body.checkpointTele()
 	elif body.bones >= 15:
 		body.playText("BigWorm3")
+		for i in $WORM_MOON.get_children():
+			i.wormMoon()

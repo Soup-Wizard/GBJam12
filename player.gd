@@ -19,7 +19,7 @@ const TEXT = {
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var worms = 0
-var bones = 0
+var bones = 15
 var lives = 3
 var checkpoint: Vector2
 var spawnPos = Vector2(49, 121)

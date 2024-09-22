@@ -745,11 +745,13 @@ sprite_frames = SubResource("SpriteFrames_5ktno")
 autoplay = "default"
 
 [node name="WORM_MOON" type="Node2D" parent="."]
+z_index = -1
 position = Vector2(56, -1352)
 
 [node name="worm1" parent="WORM_MOON" instance=ExtResource("11_qmcqv")]
 
 [node name="worm2" parent="WORM_MOON" instance=ExtResource("11_qmcqv")]
+rotation = 1.5708
 
 [node name="worm3" parent="WORM_MOON" instance=ExtResource("11_qmcqv")]
 rotation = 3.14159
