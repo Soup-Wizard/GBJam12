@@ -4,12 +4,14 @@ const SPEED = 100.0
 const DASH_SPEED = 175
 const JUMP_VELOCITY = -225.0
 const BOUNCE_STRENGTH = 375
+
 const TEXT = {
 	"BigWorm1": "You may be dead now but you still owe me. I'll make sure your suffering is endless if I don't see you at the moon with 15 bones.\nTalk to little worm behind me for a new trick, but that's all you get from me.\nDon't play with my bones, Ghosty! Playing with my bones is like playing with my emotions!",
 	"BigWormHasSpoken": "Quit wasting my time and get my bones!",
 	"LittleWorm1": "Don't tell Big Worm about this.\nUse this with your jump to reach higher ground.",
 	"BigWorm2": "What did I tell you, Ghosty? Stop playing with my emotions!\nGet my bones before you waste my time again.",
-	"BigWorm3": "You actually did it? I guess I underestimated your abilities.\nLet the worm moon commence and free your soul!"
+	"BigWorm3": "You actually did it? I guess I underestimated your abilities.\nLet the worm moon commence and free your soul!",
+	"Checkpoint": "Checkpoint activated"
 }
 
 @onready var textLabel = $Bones/Text/RichTextLabel
@@ -109,7 +111,6 @@ func _physics_process(delta):
 			else:
 				velocity.y = JUMP_VELOCITY * 0.6
 				velocity.x = DASH_SPEED * 4
-	
 	var direction = Input.get_axis("left", "right")
 	if direction:
 		if !dashing:
@@ -120,28 +121,22 @@ func _physics_process(delta):
 				$AnimatedSprite2D.flip_h = false
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-	
-	
+		
 	move_and_slide()
-
 
 func _on_dash_timer_timeout():
 	dashing = false
-
 
 func _on_jump_timer_timeout():
 	jumping = false
 	$Bones/JumpArrow/Sprite2D.visible = false
 
-
 func _on_dash_cooldown_timeout():
 	canDash = true
 	$Bones/DashArrow/Sprite2D.visible = false
 
-
 func _on_hit_timer_timeout():
 	canBeHit = true
-
 
 func _on_visibility_timer_timeout():
 	visible = false

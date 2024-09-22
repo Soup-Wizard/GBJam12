@@ -1,6 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://d0knl3t10v8dd"]
 
 [ext_resource type="Texture2D" uid="uid://catcsawjdxut0" path="res://assets/Worm.png" id="1_56h38"]
+[ext_resource type="Script" path="res://worm.gd" id="1_xtmr3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1l352"]
 atlas = ExtResource("1_56h38")
@@ -38,18 +39,13 @@ animations = [{
 "speed": 12.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ep38u"]
-size = Vector2(12, 3)
+[node name="worm" type="Node2D"]
+script = ExtResource("1_xtmr3")
 
-[node name="worm" type="StaticBody2D"]
+[node name="MoonAnchor" type="Node2D" parent="."]
+position = Vector2(0, -26)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-rotation = 1.5708
 sprite_frames = SubResource("SpriteFrames_27jc8")
 autoplay = "default"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-2, 0.5)
-shape = SubResource("RectangleShape2D_ep38u")
-one_way_collision = true

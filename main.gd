@@ -50,13 +50,6 @@ func _on_area_2d_body_entered(body):
 		body.playText("LittleWorm1")
 		LittleWorm1 = true
 
-
-#func _on_worm_4_body_entered(body):
-	#if !LittleWorm1:
-		#body.playText("LittleWorm1")
-		#LittleWorm1 = true
-
-
 func _on_big_worm_area_body_entered(body):
 	if !body.textActive:
 		if !BigWormHasSpoken:
@@ -74,8 +67,6 @@ func _on_big_worm_area_body_entered(body):
 			BigWormHasSpoken = true
 			await get_tree().create_timer(10).timeout
 			LittleWorm1 = false
-			
-
 
 func _on_big_worm_2_area_body_entered(body):
 	if body.bones < 15:
