@@ -42,6 +42,7 @@ var canBeHit = true
 var textActive = false
 var ending = false
 var endPos: Vector2
+var paused = false
 
 # NOTE
 # When time permits, add a func with a tween that drags your character to center of the moon,
@@ -105,24 +106,33 @@ func _physics_process(delta):
 	elif lives == 0:
 		$Bones/Label2.text = ": 0"
 	
+	# Handle pause
+	if Input.is_action_just_pressed("start"):
+		if !paused:
+			paused = true
+			Engine.time_scale = 0
+		else:
+			Engine.time_scale = 1
+			paused = false
+	
 	# Add the gravity.
-	if not is_on_floor() and !ending:
+	if not is_on_floor() and !ending and !paused:
 		velocity.y += gravity * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("up") and is_on_floor() and !ending:
+	if Input.is_action_just_pressed("up") and is_on_floor() and !ending and !paused:
 		velocity.y = JUMP_VELOCITY
 	
 	# Handle wells
-	if Input.is_action_just_pressed("down") and !ending:
+	if Input.is_action_just_pressed("down") and !ending and !paused:
 		wellTele()
 	
 	# Handle Checkpoints
-	if Input.is_action_just_pressed("select") and !ending:
+	if Input.is_action_just_pressed("select") and !ending and !paused:
 		if lives > 0 && checkpoint:
 			checkpointTele()
 	
-	if Input.is_action_just_pressed("Pow1") and !ending:
+	if Input.is_action_just_pressed("Pow1") and !ending and !paused:
 		if canJump:
 			if !jumping:
 				$Bones/JumpArrow/Sprite2D.visible = true
@@ -130,7 +140,7 @@ func _physics_process(delta):
 				$jumpTimer.start()
 				velocity.y = JUMP_VELOCITY * 1.5
 	
-	if Input.is_action_just_pressed("Pow2") and !ending:
+	if Input.is_action_just_pressed("Pow2") and !ending and !paused:
 		if canDash:
 			canDash = false
 			dashing = true
@@ -144,7 +154,7 @@ func _physics_process(delta):
 				velocity.y = JUMP_VELOCITY * 0.6
 				velocity.x = DASH_SPEED * 4
 	var direction = Input.get_axis("left", "right")
-	if direction and !ending:
+	if direction and !ending and !paused:
 		if !dashing:
 			velocity.x = direction * SPEED
 			if direction < 0:
