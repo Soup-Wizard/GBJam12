@@ -6,19 +6,19 @@ const JUMP_VELOCITY = -225.0
 const BOUNCE_STRENGTH = 375
 
 const TEXT = {
-	"BigWorm1": "You may be dead now but you still owe me. I'll make sure you suffer endlessly if you don't meet me at the moon with 15 bones.",
-	"BigWorm1.1": "Talk to Little Worm behind me for a new trick, but that's all you get from me.",
+	"BigWorm1": "You may have died but you still owe me. I'll make sure you suffer endlessly if you don't meet me at the moon with 15 bones.",
+	"BigWorm1.1": "Little Worm has something for you to climb the roots down here, but that's all you're getting from the worms.",
 	"BigWorm1.2": "Don't play with my bones, Ghosty! Playing with my bones is like playing with my emotions!",
 	"BigWormHasSpoken": "Quit wasting my time and get my bones!",
-	"LittleWorm1": "Don't tell Big Worm about this.\nUse this with your jump to reach higher ground.",
+	"LittleWorm1": "Don't tell Big Worm about this.\nUse this with your jump to reach higher ground!",
 	"BigWorm2": "What did I tell you, Ghosty? Stop playing with my emotions!\nGet my bones before you waste my time again.",
 	"BigWorm3": "You actually did it? I guess I underestimated you...\n",
-	"BigWorm4": "Let the worm moon commence! Free your SPOOKY soul!",
-	"Checkpoint": "Checkpoint activated!",
+	"BigWorm4": "Let the worm moon commence! Get on up and free your spooky soul!",
+	"Checkpoint": "Checkpoint activated!\nTAB / SEL to return.",
 	"CheckpointRead": "Let's see what it says...",
 	"Checkpoint1": "'Oh how I wish I made it to the clouds before I died...'\n'Those beautiful blobs of vapor filled with bones.'",
 	"Checkpoint2": "'Oh how I wish I took my time in life before I died...'\n'Then I wouldn't be so dead right now.'",
-	"Checkpoint3": "'Oh how I wish I ate more food before I died...'\n'Then I wouldn't be so hungry right now.",
+	"Checkpoint3": "'Oh how I wish they didn't nail the coffin shut...\n'Then I could get out of here before it's too late.",
 	"Ending1": "Art/Audio/Code created by\nSoup-Wizard for GBJAM 12",
 	"Ending2": "Thanks for playing!\n- Soup-Wizard"
 }
@@ -34,8 +34,8 @@ var checkpoint: Vector2
 var spawnPos = Vector2(49, 121)
 var canTele = false
 var teleCoords: Vector2
-var canDash = false ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
-var canJump = false ## SWITCH CHANGE FIX BACK TO FALSE AFTER TESTING
+var canDash = false
+var canJump = false
 var dashing = false
 var jumping = false
 var canBeHit = true
@@ -56,6 +56,8 @@ func checkpointTele(wormReturn = false):
 	if checkpoint:
 		if wormReturn || lives > 0:
 			position = checkpoint
+		else:
+			position = spawnPos
 	else:
 		position = spawnPos
 

@@ -12,6 +12,11 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if $player.bones == 15:
+		$BigWorm1.visible = false
+		$BigWorm1/BigWormArea/CollisionShape2D.set_deferred("disabled", true)
+		$worm3.visible = false
+		$worm4.visible = false
 	pass
 
 
@@ -51,28 +56,21 @@ func _on_area_2d_body_entered(body):
 		LittleWorm1 = true
 
 func _on_big_worm_area_body_entered(body):
-	if !body.textActive:
+	if !body.textActive && body.bones < 15:
 		if !BigWormHasSpoken:
 			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", false)
 			$BigWorm1/Blocker.visible = true
 		if !BigWormHasSpoken:
 			await body.playText("BigWorm1")
 			await body.playText("BigWorm1.1")
+			body.playText("BigWorm1.2")
+			await get_tree().create_timer(5).timeout
 			$BigWorm1/Blocker.visible = false
 			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", true)
-			await body.playText("BigWorm1.2")
 			BigWormHasSpoken = true
 			LittleWorm1 = false
 		else:
 			body.playText("BigWormHasSpoken")
-		
-		#if !BigWormHasSpoken:
-			#await get_tree().create_timer(25).timeout
-			#$BigWorm1/Blocker.visible = false
-			#$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", true)
-			#BigWormHasSpoken = true
-			#await get_tree().create_timer(10).timeout
-			#LittleWorm1 = false
 
 func _on_big_worm_2_area_body_entered(body):
 	if body.bones < 15 && !BigWorm2Speaking:
