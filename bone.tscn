@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://chbgiwbwssqdu"]
+[gd_scene load_steps=7 format=3 uid="uid://chbgiwbwssqdu"]
 
 [ext_resource type="Script" path="res://bone.gd" id="1_7vf6p"]
 [ext_resource type="Texture2D" uid="uid://d8i6tpi5inm8" path="res://assets/Bone.png" id="1_l0ye6"]
+[ext_resource type="AudioStream" uid="uid://bbbtcq3ijf71n" path="res://assets/Bone_Get.wav" id="3_jdnm0"]
+[ext_resource type="AudioStream" uid="uid://chbmpvqppr14d" path="res://assets/Bone_Done.wav" id="4_bj0mo"]
+[ext_resource type="AudioStream" uid="uid://d1cwjrrcqt3n0" path="res://assets/Bone_Near.wav" id="5_5x6eb"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fpcul"]
 radius = 2.15542
@@ -14,8 +17,25 @@ script = ExtResource("1_7vf6p")
 texture_filter = 1
 texture = ExtResource("1_l0ye6")
 
+[node name="BoneGet" type="AudioStreamPlayer" parent="Sprite2D"]
+stream = ExtResource("3_jdnm0")
+volume_db = 7.0
+
+[node name="BoneDone" type="AudioStreamPlayer" parent="Sprite2D"]
+stream = ExtResource("4_bj0mo")
+volume_db = 7.0
+
+[node name="BoneNear" type="AudioStreamPlayer2D" parent="Sprite2D"]
+stream = ExtResource("5_5x6eb")
+volume_db = 7.0
+autoplay = true
+max_distance = 169.0
+max_polyphony = 15
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 0.837758
 shape = SubResource("CapsuleShape2D_fpcul")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="finished" from="Sprite2D/BoneGet" to="." method="_on_bone_get_finished"]
+[connection signal="finished" from="Sprite2D/BoneDone" to="." method="_on_bone_done_finished"]
