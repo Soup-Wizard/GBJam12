@@ -54,10 +54,7 @@ func wellTele():
 
 func checkpointTele(wormReturn = false):
 	if checkpoint:
-		if wormReturn || lives > 0:
-			position = checkpoint
-		else:
-			position = spawnPos
+		position = checkpoint
 	else:
 		position = spawnPos
 

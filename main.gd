@@ -64,7 +64,7 @@ func _on_big_worm_area_body_entered(body):
 			await body.playText("BigWorm1")
 			await body.playText("BigWorm1.1")
 			body.playText("BigWorm1.2")
-			await get_tree().create_timer(5).timeout
+			await get_tree().create_timer(7).timeout
 			$BigWorm1/Blocker.visible = false
 			$BigWorm1/Blocker/StaticBody2D/CollisionShape2D2.set_deferred("disabled", true)
 			BigWormHasSpoken = true
@@ -92,6 +92,8 @@ func _on_big_worm_2_area_body_entered(body):
 		bonesNode.get_node("Sprite2D").visible = false
 		bonesNode.get_node("Label2").visible = false
 		bonesNode.get_node("Sprite2D2").visible = false
+		bonesNode.get_node("JumpArrow").visible = false
+		bonesNode.get_node("DashArrow").visible = false
 		#await get_tree().create_timer(0.5).timeout
 		for i in $WORM_MOON.get_children():
 			i.wormMoon()

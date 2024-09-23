@@ -17,12 +17,12 @@ func _on_body_entered(body):
 		visible = false
 		boneNear.stop()
 		body.bones += 1
-		if body.bones == 5 || body.bones == 10 || body.bones == 15:
-			body.lives += 1
 		if body.bones < 15:
 			boneGet.play()
 		else:
 			boneDone.play()
+		if body.bones == 5 || body.bones == 10 || body.bones == 15:
+			body.lives += 1
 
 func _on_bone_get_finished():
 	queue_free()
