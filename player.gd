@@ -28,7 +28,7 @@ const TEXT = {
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var worms = 0
-var bones = 15
+var bones = 0
 var lives = 3
 var checkpoint: Vector2
 var spawnPos = Vector2(49, 121)
@@ -41,6 +41,7 @@ var jumping = false
 var canBeHit = true
 var textActive = false
 var ending = false
+var endPos: Vector2
 
 # NOTE
 # When time permits, add a func with a tween that drags your character to center of the moon,
@@ -75,12 +76,19 @@ func playText(txt):
 		textActive = false
 
 func endingAnim():
-	#$AnimatedSprite2D.stop()
+	#ending = true
+	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.play("laugh")
-	$CollisionShape2D.queue_free()
+	#$CollisionShape2D.queue_free()
+	print(position)
+	print(global_position)
 	var tween = create_tween()
-	tween.tween_property($AnimatedSprite2D, "position", Vector2(104, -1384), 3)
-	$AnimatedSprite2D.position = Vector2(104, -1384)
+	tween.tween_property(self, "position", Vector2(104, -1384), 3)
+	#await tween.tween_property($AnimatedSprite2D, "position", Vector2(104, -1384), 3)
+	#tween.tween_property($AnimatedSprite2D/Camera2D, "global_position", Vector2(104, -1384), 3)
+	$AnimatedSprite2D/Camera2D.offset = Vector2(0, -32)
+	position = Vector2(104, -1384)
+	global_position = Vector2(104, -1384)
 	pass
 
 func _physics_process(delta):

@@ -99,7 +99,8 @@ func _on_big_worm_2_area_body_entered(body):
 			i.wormMoon()
 		await body.playText("BigWorm4")
 		await get_tree().create_timer(2).timeout
-		await body.playText("Ending1")
 		body.ending = true
+		body.endPos = body.position
+		await body.playText("Ending1")
 		await body.endingAnim()
 		await body.playText("Ending2")
